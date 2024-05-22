@@ -1,34 +1,8 @@
-import {headers} from "next/headers";
-import {put} from "@vercel/blob";
-import {kv} from "@vercel/kv";
-import {redirect} from "next/navigation";
-
-import IdPageClient from "./page.client";
-
-export default function IdPage({params: {id}}: {params: {id: string}}) {
-  async function save(
-    formData: FormData,
-    location: {latitude: number; longitude: number},
-    exif: Record<string, unknown>,
-  ) {
-    "use server";
-
-    const image = formData.get("image") as File;
-    const {url} = await put(`/${id}/${image.name}`, image, {access: "public"});
-
-    formData.delete("image");
-
-    await kv.set(id, {
-      id,
-      image: url,
-      formData,
-      location,
-      exif,
-      headers: Object.fromEntries(headers()),
-    });
-
-    redirect("/success");
+export default function HomePage() {
+    return (
+      <div>
+        Este servicio está en beta cerrada, volvé en unas semanas para poder enviar tu dinero de una
+        manera fácil a amigos y familiares.
+      </div>
+    );
   }
-
-  return <IdPageClient save={save} />;
-}
